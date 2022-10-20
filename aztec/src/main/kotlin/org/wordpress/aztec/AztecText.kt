@@ -217,7 +217,7 @@ open class AztecText : AppCompatEditText, TextWatcher, UnknownHtmlSpan.OnUnknown
     }
 
     private val REGEXP_EMAIL = Regex("^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,}$",
-            setOf(RegexOption.DOT_MATCHES_ALL, RegexOption.IGNORE_CASE))
+        setOf(RegexOption.DOT_MATCHES_ALL, RegexOption.IGNORE_CASE))
     private val REGEXP_STANDALONE_URL = Regex("^(?:[a-z]+:|#|\\?|\\.|/)", RegexOption.DOT_MATCHES_ALL)
 
     enum class EditorHasChanges {
@@ -413,14 +413,14 @@ open class AztecText : AppCompatEditText, TextWatcher, UnknownHtmlSpan.OnUnknown
 
         val styles = context.obtainStyledAttributes(attrs, R.styleable.AztecText, 0, R.style.AztecTextStyle)
         setLineSpacing(
-                styles.getDimension(
-                        R.styleable.AztecText_lineSpacingExtra,
-                        resources.getDimension(R.dimen.spacing_extra)
-                ),
-                styles.getFloat(
-                        R.styleable.AztecText_lineSpacingMultiplier,
-                        resources.getString(R.dimen.spacing_multiplier).toFloat()
-                )
+            styles.getDimension(
+                R.styleable.AztecText_lineSpacingExtra,
+                resources.getDimension(R.dimen.spacing_extra)
+            ),
+            styles.getFloat(
+                R.styleable.AztecText_lineSpacingMultiplier,
+                resources.getString(R.dimen.spacing_multiplier).toFloat()
+            )
         )
         setBackgroundColor(styles.getColor(R.styleable.AztecText_backgroundColor, ContextCompat.getColor(context, R.color.background)))
         setTextColor(styles.getColor(R.styleable.AztecText_textColor, ContextCompat.getColor(context, R.color.text)))
@@ -435,85 +435,85 @@ open class AztecText : AppCompatEditText, TextWatcher, UnknownHtmlSpan.OnUnknown
         commentsVisible = styles.getBoolean(R.styleable.AztecText_commentsVisible, commentsVisible)
 
         verticalParagraphPadding = styles.getDimensionPixelSize(R.styleable.AztecText_blockVerticalPadding,
-                        resources.getDimensionPixelSize(R.dimen.block_vertical_padding))
+            resources.getDimensionPixelSize(R.dimen.block_vertical_padding))
         verticalParagraphMargin = styles.getDimensionPixelSize(R.styleable.AztecText_paragraphVerticalMargin,
-                        resources.getDimensionPixelSize(R.dimen.block_vertical_margin))
+            resources.getDimensionPixelSize(R.dimen.block_vertical_margin))
         verticalHeadingMargin = styles.getDimensionPixelSize(R.styleable.AztecText_headingVerticalPadding,
-                        resources.getDimensionPixelSize(R.dimen.heading_vertical_padding))
+            resources.getDimensionPixelSize(R.dimen.heading_vertical_padding))
 
         initInlineFormatter(styles)
 
         val listStyle = BlockFormatter.ListStyle(
-                styles.getColor(R.styleable.AztecText_bulletColor, 0),
-                styles.getDimensionPixelSize(R.styleable.AztecText_bulletMargin, 0),
-                styles.getDimensionPixelSize(R.styleable.AztecText_bulletPadding, 0),
-                styles.getDimensionPixelSize(R.styleable.AztecText_bulletWidth, 0),
-                verticalParagraphPadding)
+            styles.getColor(R.styleable.AztecText_bulletColor, 0),
+            styles.getDimensionPixelSize(R.styleable.AztecText_bulletMargin, 0),
+            styles.getDimensionPixelSize(R.styleable.AztecText_bulletPadding, 0),
+            styles.getDimensionPixelSize(R.styleable.AztecText_bulletWidth, 0),
+            verticalParagraphPadding)
 
         listItemStyle = BlockFormatter.ListItemStyle(
-                styles.getBoolean(R.styleable.AztecText_taskListStrikethroughChecked, false),
-                styles.getColor(R.styleable.AztecText_taskListCheckedTextColor, 0))
+            styles.getBoolean(R.styleable.AztecText_taskListStrikethroughChecked, false),
+            styles.getColor(R.styleable.AztecText_taskListCheckedTextColor, 0))
 
         blockFormatter = BlockFormatter(editor = this,
-                listStyle = listStyle,
-                listItemStyle = listItemStyle,
-                quoteStyle = BlockFormatter.QuoteStyle(
-                        styles.getColor(R.styleable.AztecText_quoteBackground, 0),
-                        styles.getColor(R.styleable.AztecText_quoteColor, 0),
-                        styles.getColor(R.styleable.AztecText_quoteTextColor,
-                                ContextCompat.getColor(context, R.color.text)),
-                        styles.getFraction(R.styleable.AztecText_quoteBackgroundAlpha, 1, 1, 0f),
-                        styles.getDimensionPixelSize(R.styleable.AztecText_quoteMargin, 0),
-                        styles.getDimensionPixelSize(R.styleable.AztecText_quotePadding, 0),
-                        styles.getDimensionPixelSize(R.styleable.AztecText_quoteWidth, 0),
-                        styles.getDimensionPixelSize(R.styleable.AztecText_quoteVerticalPadding, verticalParagraphPadding)),
-                headerStyle = BlockFormatter.HeaderStyles(verticalHeadingMargin, mapOf(
-                        AztecHeadingSpan.Heading.H1 to BlockFormatter.HeaderStyles.HeadingStyle(
-                                styles.getDimensionPixelSize(R.styleable.AztecText_headingOneFontSize, 0),
-                                styles.getColor(R.styleable.AztecText_headingOneFontColor, 0)
-                        ),
-                        AztecHeadingSpan.Heading.H2 to BlockFormatter.HeaderStyles.HeadingStyle(
-                                styles.getDimensionPixelSize(R.styleable.AztecText_headingTwoFontSize, 0),
-                                styles.getColor(R.styleable.AztecText_headingTwoFontColor, 0)
-                        ),
-                        AztecHeadingSpan.Heading.H3 to BlockFormatter.HeaderStyles.HeadingStyle(
-                                styles.getDimensionPixelSize(R.styleable.AztecText_headingThreeFontSize, 0),
-                                styles.getColor(R.styleable.AztecText_headingThreeFontColor, 0)
-                        ),
-                        AztecHeadingSpan.Heading.H4 to BlockFormatter.HeaderStyles.HeadingStyle(
-                                styles.getDimensionPixelSize(R.styleable.AztecText_headingFourFontSize, 0),
-                                styles.getColor(R.styleable.AztecText_headingFourFontColor, 0)
-                        ),
-                        AztecHeadingSpan.Heading.H5 to BlockFormatter.HeaderStyles.HeadingStyle(
-                                styles.getDimensionPixelSize(R.styleable.AztecText_headingFiveFontSize, 0),
-                                styles.getColor(R.styleable.AztecText_headingFiveFontColor, 0)
-                        ),
-                        AztecHeadingSpan.Heading.H6 to BlockFormatter.HeaderStyles.HeadingStyle(
-                                styles.getDimensionPixelSize(R.styleable.AztecText_headingSixFontSize, 0),
-                                styles.getColor(R.styleable.AztecText_headingSixFontColor, 0)
-                        )
-                )),
-                preformatStyle = BlockFormatter.PreformatStyle(
-                        styles.getColor(R.styleable.AztecText_preformatBackground, 0),
-                        getPreformatBackgroundAlpha(styles),
-                        styles.getColor(R.styleable.AztecText_preformatColor, 0),
-                        styles.getDimensionPixelSize(R.styleable.AztecText_preformatVerticalPadding, verticalParagraphPadding),
-                        styles.getDimensionPixelSize(R.styleable.AztecText_preformatLeadingMargin,
-                                resources.getDimensionPixelSize(R.dimen.preformat_leading_margin)),
-                        styles.getColor(R.styleable.AztecText_preformatBorderColor, 0),
-                        styles.getDimensionPixelSize(R.styleable.AztecText_preformatBorderRadius, 0),
-                        styles.getDimensionPixelSize(R.styleable.AztecText_preformatBorderThickness, 0),
-                        styles.getDimensionPixelSize(R.styleable.AztecText_preformatTextSize, textSize.toInt())
+            listStyle = listStyle,
+            listItemStyle = listItemStyle,
+            quoteStyle = BlockFormatter.QuoteStyle(
+                styles.getColor(R.styleable.AztecText_quoteBackground, 0),
+                styles.getColor(R.styleable.AztecText_quoteColor, 0),
+                styles.getColor(R.styleable.AztecText_quoteTextColor,
+                    ContextCompat.getColor(context, R.color.text)),
+                styles.getFraction(R.styleable.AztecText_quoteBackgroundAlpha, 1, 1, 0f),
+                styles.getDimensionPixelSize(R.styleable.AztecText_quoteMargin, 0),
+                styles.getDimensionPixelSize(R.styleable.AztecText_quotePadding, 0),
+                styles.getDimensionPixelSize(R.styleable.AztecText_quoteWidth, 0),
+                styles.getDimensionPixelSize(R.styleable.AztecText_quoteVerticalPadding, verticalParagraphPadding)),
+            headerStyle = BlockFormatter.HeaderStyles(verticalHeadingMargin, mapOf(
+                AztecHeadingSpan.Heading.H1 to BlockFormatter.HeaderStyles.HeadingStyle(
+                    styles.getDimensionPixelSize(R.styleable.AztecText_headingOneFontSize, 0),
+                    styles.getColor(R.styleable.AztecText_headingOneFontColor, 0)
                 ),
-                alignmentRendering = alignmentRendering,
-                exclusiveBlockStyles = BlockFormatter.ExclusiveBlockStyles(styles.getBoolean(R.styleable.AztecText_exclusiveBlocks, false), verticalParagraphPadding),
-                paragraphStyle = BlockFormatter.ParagraphStyle(verticalParagraphMargin)
+                AztecHeadingSpan.Heading.H2 to BlockFormatter.HeaderStyles.HeadingStyle(
+                    styles.getDimensionPixelSize(R.styleable.AztecText_headingTwoFontSize, 0),
+                    styles.getColor(R.styleable.AztecText_headingTwoFontColor, 0)
+                ),
+                AztecHeadingSpan.Heading.H3 to BlockFormatter.HeaderStyles.HeadingStyle(
+                    styles.getDimensionPixelSize(R.styleable.AztecText_headingThreeFontSize, 0),
+                    styles.getColor(R.styleable.AztecText_headingThreeFontColor, 0)
+                ),
+                AztecHeadingSpan.Heading.H4 to BlockFormatter.HeaderStyles.HeadingStyle(
+                    styles.getDimensionPixelSize(R.styleable.AztecText_headingFourFontSize, 0),
+                    styles.getColor(R.styleable.AztecText_headingFourFontColor, 0)
+                ),
+                AztecHeadingSpan.Heading.H5 to BlockFormatter.HeaderStyles.HeadingStyle(
+                    styles.getDimensionPixelSize(R.styleable.AztecText_headingFiveFontSize, 0),
+                    styles.getColor(R.styleable.AztecText_headingFiveFontColor, 0)
+                ),
+                AztecHeadingSpan.Heading.H6 to BlockFormatter.HeaderStyles.HeadingStyle(
+                    styles.getDimensionPixelSize(R.styleable.AztecText_headingSixFontSize, 0),
+                    styles.getColor(R.styleable.AztecText_headingSixFontColor, 0)
+                )
+            )),
+            preformatStyle = BlockFormatter.PreformatStyle(
+                styles.getColor(R.styleable.AztecText_preformatBackground, 0),
+                getPreformatBackgroundAlpha(styles),
+                styles.getColor(R.styleable.AztecText_preformatColor, 0),
+                styles.getDimensionPixelSize(R.styleable.AztecText_preformatVerticalPadding, verticalParagraphPadding),
+                styles.getDimensionPixelSize(R.styleable.AztecText_preformatLeadingMargin,
+                    resources.getDimensionPixelSize(R.dimen.preformat_leading_margin)),
+                styles.getColor(R.styleable.AztecText_preformatBorderColor, 0),
+                styles.getDimensionPixelSize(R.styleable.AztecText_preformatBorderRadius, 0),
+                styles.getDimensionPixelSize(R.styleable.AztecText_preformatBorderThickness, 0),
+                styles.getDimensionPixelSize(R.styleable.AztecText_preformatTextSize, textSize.toInt())
+            ),
+            alignmentRendering = alignmentRendering,
+            exclusiveBlockStyles = BlockFormatter.ExclusiveBlockStyles(styles.getBoolean(R.styleable.AztecText_exclusiveBlocks, false), verticalParagraphPadding),
+            paragraphStyle = BlockFormatter.ParagraphStyle(verticalParagraphMargin)
         )
         EnhancedMovementMethod.taskListClickHandler = TaskListClickHandler(listStyle)
 
         linkFormatter = LinkFormatter(this, LinkFormatter.LinkStyle(styles.getColor(
-                R.styleable.AztecText_linkColor, 0),
-                styles.getBoolean(R.styleable.AztecText_linkUnderline, true)))
+            R.styleable.AztecText_linkColor, 0),
+            styles.getBoolean(R.styleable.AztecText_linkUnderline, true)))
 
         lineBlockFormatter = LineBlockFormatter(this)
 
@@ -521,7 +521,7 @@ open class AztecText : AppCompatEditText, TextWatcher, UnknownHtmlSpan.OnUnknown
 
         // set the pictures max size to the min of screen width/height and DEFAULT_IMAGE_WIDTH
         val minScreenSize = Math.min(context.resources.displayMetrics.widthPixels,
-                context.resources.displayMetrics.heightPixels)
+            context.resources.displayMetrics.heightPixels)
         maxImagesWidth = Math.min(minScreenSize, DEFAULT_IMAGE_WIDTH)
         minImagesWidth = lineHeight
 
@@ -562,22 +562,22 @@ open class AztecText : AppCompatEditText, TextWatcher, UnknownHtmlSpan.OnUnknown
                     // check if the user long-clicked on the selection to start a drag movement
                     val selectionRect: Rect = getBoxContainingSelectionCoordinates()
                     if (selectionRect.left < lastPressedXCoord
-                            && selectionRect.top < lastPressedYCoord
-                            && selectionRect.right > lastPressedXCoord
-                            && selectionRect.bottom > lastPressedYCoord) {
+                        && selectionRect.top < lastPressedYCoord
+                        && selectionRect.right > lastPressedXCoord
+                        && selectionRect.bottom > lastPressedYCoord) {
 
                         if (selectionHasExactlyOneMarker(
-                                        start,
-                                        end,
-                                        EndOfParagraphMarker::class.java)) {
+                                start,
+                                end,
+                                EndOfParagraphMarker::class.java)) {
                             // signal this event as handled so dragging does not go forward
                             return@OnLongClickListener true
                         }
 
                         if (selectionHasExactlyOneMarker(
-                                        start,
-                                        end,
-                                        AztecVisualLinebreak::class.java)) {
+                                start,
+                                end,
+                                AztecVisualLinebreak::class.java)) {
                             // signal this event as handled so dragging does not go forward
                             return@OnLongClickListener true
                         }
@@ -611,9 +611,9 @@ open class AztecText : AppCompatEditText, TextWatcher, UnknownHtmlSpan.OnUnknown
 
     private fun <T>selectionHasExactlyOneMarker(start: Int, end: Int, type: Class<T>): Boolean {
         val spanFound: Array<T> = editableText.getSpans(
-                start,
-                end,
-                type
+            start,
+            end,
+            type
         )
         return spanFound.size == 1
     }
@@ -634,10 +634,10 @@ open class AztecText : AppCompatEditText, TextWatcher, UnknownHtmlSpan.OnUnknown
             val lastLineBounds = Rect()
             getLineBounds(endLine, lastLineBounds)
             Rect(
-                    startLineBounds.left + location[0] - scrollX,
-                    startLineBounds.top + location[1] - scrollY,
-                    lastLineBounds.right + location[0] - scrollX,
-                    lastLineBounds.bottom + location[1] - scrollY
+                startLineBounds.left + location[0] - scrollX,
+                startLineBounds.top + location[1] - scrollY,
+                lastLineBounds.right + location[0] - scrollX,
+                lastLineBounds.bottom + location[1] - scrollY
             )
         } else {
             // if the selection doesn't go through lines, then make the containing box adjusted to actual
@@ -656,7 +656,7 @@ open class AztecText : AppCompatEditText, TextWatcher, UnknownHtmlSpan.OnUnknown
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
-                && event.action == MotionEvent.ACTION_DOWN) {
+            && event.action == MotionEvent.ACTION_DOWN) {
             // we'll use these values in OnLongClickListener
             lastPressedXCoord = event.rawX.toInt()
             lastPressedYCoord = event.rawY.toInt()
@@ -696,8 +696,8 @@ open class AztecText : AppCompatEditText, TextWatcher, UnknownHtmlSpan.OnUnknown
 
                     // create a new Spannable to perform the text change here
                     var newText = SpannableStringBuilder(dest.subSequence(0, dstart))
-                            .append(source.subSequence(start, end))
-                            .append(dest.subSequence(dend, dest.length))
+                        .append(source.subSequence(start, end))
+                        .append(dest.subSequence(dend, dest.length))
 
                     // force a history update to ensure the change is recorded
                     history.beforeTextChanged(this@AztecText)
@@ -718,10 +718,10 @@ open class AztecText : AppCompatEditText, TextWatcher, UnknownHtmlSpan.OnUnknown
 
         val emptyEditTextBackspaceDetector = InputFilter { source, start, end, dest, dstart, dend ->
             if (selectionStart == 0 && selectionEnd == 0
-                    && start == 0
-                    && dstart == 0 && dend == 0
-                    && isCleanStringEmpty(source)
-                    && !isHandlingBackspaceEvent) {
+                && start == 0
+                && dstart == 0 && dend == 0
+                && isCleanStringEmpty(source)
+                && !isHandlingBackspaceEvent) {
                 isHandlingBackspaceEvent = true
 
                 // Prevent the forced backspace from being added to the history stack
@@ -806,12 +806,12 @@ open class AztecText : AppCompatEditText, TextWatcher, UnknownHtmlSpan.OnUnknown
         // will have the chance to run their "beforeTextChanged" and "onTextChanged" with the same string!
 
         BlockElementWatcher(this)
-                .add(HeadingHandler(alignmentRendering))
-                .add(ListHandler())
-                .add(ListItemHandler(alignmentRendering, listItemStyle))
-                .add(QuoteHandler())
-                .add(PreformatHandler())
-                .install(this)
+            .add(HeadingHandler(alignmentRendering))
+            .add(ListHandler())
+            .add(ListItemHandler(alignmentRendering, listItemStyle))
+            .add(QuoteHandler())
+            .add(PreformatHandler())
+            .install(this)
 
         TextDeleter.install(this)
 
@@ -1187,7 +1187,7 @@ open class AztecText : AppCompatEditText, TextWatcher, UnknownHtmlSpan.OnUnknown
 
     fun getSelectedText(): String {
         if (selectionStart == -1 || selectionEnd == -1
-                || editableText.length < selectionEnd || editableText.length < selectionStart) return ""
+            || editableText.length < selectionEnd || editableText.length < selectionStart) return ""
         return editableText.substring(selectionStart, selectionEnd)
     }
 
@@ -1220,12 +1220,12 @@ open class AztecText : AppCompatEditText, TextWatcher, UnknownHtmlSpan.OnUnknown
         }
 
         plugins.filter { it is IToolbarButton }
-                .flatMap { (it as IToolbarButton).action.textFormats }
-                .forEach {
-                    if (contains(it, newSelStart, newSelEnd)) {
-                        styles.add(it)
-                    }
+            .flatMap { (it as IToolbarButton).action.textFormats }
+            .forEach {
+                if (contains(it, newSelStart, newSelEnd)) {
+                    styles.add(it)
                 }
+            }
 
         return styles
     }
@@ -1283,8 +1283,8 @@ open class AztecText : AppCompatEditText, TextWatcher, UnknownHtmlSpan.OnUnknown
             }
             else -> {
                 plugins.filter { it is IToolbarButton && it.action.textFormats.contains(textFormat) }
-                        .map { it as IToolbarButton }
-                        .forEach { it.toggle() }
+                    .map { it as IToolbarButton }
+                    .forEach { it.toggle() }
             }
         }
 
@@ -1477,7 +1477,7 @@ open class AztecText : AppCompatEditText, TextWatcher, UnknownHtmlSpan.OnUnknown
             val callbacks = object : Html.ImageGetter.Callbacks {
                 override fun onImageFailed() {
                     replaceImage(
-                            getPlaceholderDrawableFromResID(context, drawableFailed, maxImagesWidth)
+                        getPlaceholderDrawableFromResID(context, drawableFailed, maxImagesWidth)
                     )
                 }
 
@@ -1496,7 +1496,7 @@ open class AztecText : AppCompatEditText, TextWatcher, UnknownHtmlSpan.OnUnknown
                     }
                 }
             }
-            imageGetter?.loadImage(it.getSource(), callbacks, maxDimension, minImagesWidth)
+            imageGetter?.loadImage(it, it.getSource(), callbacks, maxDimension, minImagesWidth)
         }
     }
 
@@ -1839,7 +1839,7 @@ open class AztecText : AppCompatEditText, TextWatcher, UnknownHtmlSpan.OnUnknown
             // Android 8 Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/8827
             clipboardIdentifier -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && Build.VERSION.SDK_INT < Build.VERSION_CODES.P
-                        && Build.MANUFACTURER.toLowerCase().equals("samsung")) {
+                    && Build.MANUFACTURER.toLowerCase().equals("samsung")) {
                     // Nope return true
                     Toast.makeText(context, context.getString(R.string.samsung_disabled_custom_clipboard, Build.VERSION.RELEASE), Toast.LENGTH_LONG).show()
                 } else {
@@ -1864,18 +1864,18 @@ open class AztecText : AppCompatEditText, TextWatcher, UnknownHtmlSpan.OnUnknown
         // do not copy unnecessary block hierarchy, just the minimum required
         var deleteNext = false
         output.getSpans(0, output.length, IAztecBlockSpan::class.java)
-                .sortedBy { it.nestingLevel }
-                .reversed()
-                .forEach {
-                    if (deleteNext) {
-                        output.removeSpan(it)
-                    } else {
-                        deleteNext = output.getSpanStart(it) == 0 && output.getSpanEnd(it) == output.length
-                        if (deleteNext && it is AztecListItemSpan) {
-                            deleteNext = false
-                        }
+            .sortedBy { it.nestingLevel }
+            .reversed()
+            .forEach {
+                if (deleteNext) {
+                    output.removeSpan(it)
+                } else {
+                    deleteNext = output.getSpanStart(it) == 0 && output.getSpanEnd(it) == output.length
+                    if (deleteNext && it is AztecListItemSpan) {
+                        deleteNext = false
                     }
                 }
+            }
 
         val html = Format.removeSourceEditorFormatting(parser.toHtml(output), isInCalypsoMode, isInGutenbergMode)
 
@@ -1910,14 +1910,14 @@ open class AztecText : AppCompatEditText, TextWatcher, UnknownHtmlSpan.OnUnknown
 
             // don't let the pasted text be included in any existing style
             editable.getSpans(min, min + 1, Object::class.java)
-                    .filter { editable.getSpanStart(it) != editable.getSpanEnd(it) && it !is IAztecBlockSpan }
-                    .forEach {
-                        if (editable.getSpanStart(it) == min) {
-                            editable.setSpan(it, min + 1, editable.getSpanEnd(it), editable.getSpanFlags(it))
-                        } else if (editable.getSpanEnd(it) == min + 1) {
-                            editable.setSpan(it, editable.getSpanStart(it), min, editable.getSpanFlags(it))
-                        }
+                .filter { editable.getSpanStart(it) != editable.getSpanEnd(it) && it !is IAztecBlockSpan }
+                .forEach {
+                    if (editable.getSpanStart(it) == min) {
+                        editable.setSpan(it, min + 1, editable.getSpanEnd(it), editable.getSpanFlags(it))
+                    } else if (editable.getSpanEnd(it) == min + 1) {
+                        editable.setSpan(it, editable.getSpanStart(it), min, editable.getSpanFlags(it))
                     }
+                }
 
             enableTextChangedListener()
 
@@ -2130,20 +2130,20 @@ open class AztecText : AppCompatEditText, TextWatcher, UnknownHtmlSpan.OnUnknown
 
     fun removeMedia(attributePredicate: AttributePredicate) {
         text.getSpans(0, text.length, AztecMediaSpan::class.java)
-                .filter {
-                    attributePredicate.matches(it.attributes)
-                }
-                .forEach {
-                    val start = text.getSpanStart(it)
-                    val end = text.getSpanEnd(it)
+            .filter {
+                attributePredicate.matches(it.attributes)
+            }
+            .forEach {
+                val start = text.getSpanStart(it)
+                val end = text.getSpanEnd(it)
 
-                    val clickableSpan = text.getSpans(start, end, AztecMediaClickableSpan::class.java).firstOrNull()
+                val clickableSpan = text.getSpans(start, end, AztecMediaClickableSpan::class.java).firstOrNull()
 
-                    text.removeSpan(clickableSpan)
-                    text.removeSpan(it)
+                text.removeSpan(clickableSpan)
+                text.removeSpan(it)
 
-                    text.delete(start, end)
-                }
+                text.delete(start, end)
+            }
     }
 
     interface AttributePredicate {
@@ -2169,52 +2169,52 @@ open class AztecText : AppCompatEditText, TextWatcher, UnknownHtmlSpan.OnUnknown
 
     fun resetAttributedMediaSpan(attributePredicate: AttributePredicate) {
         text.getSpans(0, text.length, AztecMediaSpan::class.java)
-                .filter {
-                    attributePredicate.matches(it.attributes) && text.getSpanStart(it) != -1 && text.getSpanEnd(it) != -1
-                }
-                .forEach {
-                    editableText.setSpan(it, text.getSpanStart(it), text.getSpanEnd(it), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                }
+            .filter {
+                attributePredicate.matches(it.attributes) && text.getSpanStart(it) != -1 && text.getSpanEnd(it) != -1
+            }
+            .forEach {
+                editableText.setSpan(it, text.getSpanStart(it), text.getSpanEnd(it), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
     }
 
     fun setOverlayLevel(attributePredicate: AttributePredicate, index: Int, level: Int) {
         text.getSpans(0, text.length, AztecMediaSpan::class.java)
-                .filter {
-                    attributePredicate.matches(it.attributes)
-                }
-                .forEach {
-                    it.setOverlayLevel(index, level)
-                }
+            .filter {
+                attributePredicate.matches(it.attributes)
+            }
+            .forEach {
+                it.setOverlayLevel(index, level)
+            }
     }
 
     fun setOverlay(attributePredicate: AttributePredicate, index: Int, overlay: Drawable?, gravity: Int) {
         text.getSpans(0, text.length, AztecMediaSpan::class.java)
-                .filter {
-                    attributePredicate.matches(it.attributes)
-                }
-                .forEach {
-                    // set the new overlay drawable
-                    it.setOverlay(index, overlay, gravity)
+            .filter {
+                attributePredicate.matches(it.attributes)
+            }
+            .forEach {
+                // set the new overlay drawable
+                it.setOverlay(index, overlay, gravity)
 
-                    invalidate()
-                }
+                invalidate()
+            }
     }
 
     fun clearOverlays(attributePredicate: AttributePredicate) {
         text.getSpans(0, text.length, AztecMediaSpan::class.java)
-                .filter {
-                    attributePredicate.matches(it.attributes)
-                }
-                .forEach {
-                    it.clearOverlays()
+            .filter {
+                attributePredicate.matches(it.attributes)
+            }
+            .forEach {
+                it.clearOverlays()
 
-                    invalidate()
-                    post {
-                        // Refresh last history item so undo/redo works properly
-                        // for media.
-                        history.refreshLastHistoryItem(this@AztecText)
-                    }
+                invalidate()
+                post {
+                    // Refresh last history item so undo/redo works properly
+                    // for media.
+                    history.refreshLastHistoryItem(this@AztecText)
                 }
+            }
     }
 
     fun getElementAttributes(attributePredicate: AttributePredicate): AztecAttributes {
@@ -2223,11 +2223,11 @@ open class AztecText : AppCompatEditText, TextWatcher, UnknownHtmlSpan.OnUnknown
 
     fun getAllElementAttributes(attributePredicate: AttributePredicate): List<AztecAttributes> {
         return text
-                .getSpans(0, text.length, IAztecAttributedSpan::class.java)
-                .filter {
-                    attributePredicate.matches(it.attributes)
-                }
-                .map { it.attributes }
+            .getSpans(0, text.length, IAztecAttributedSpan::class.java)
+            .filter {
+                attributePredicate.matches(it.attributes)
+            }
+            .map { it.attributes }
     }
 
     override fun onUnknownHtmlTapped(unknownHtmlSpan: UnknownHtmlSpan) {

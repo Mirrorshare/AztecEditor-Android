@@ -26,6 +26,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.DynamicDrawableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ParagraphStyle;
 import android.text.style.TextAppearanceSpan;
@@ -101,9 +102,9 @@ public class Html {
          * setBounds() on your Drawable if it doesn't already have
          * its bounds set.
          */
-        void loadImage(String source, Html.ImageGetter.Callbacks callbacks, int maxWidth);
+        void loadImage(DynamicDrawableSpan span, String source, Html.ImageGetter.Callbacks callbacks, int maxWidth);
 
-        void loadImage(String source, Html.ImageGetter.Callbacks callbacks, int maxWidth, int minWidth);
+        void loadImage(DynamicDrawableSpan span, String source, Html.ImageGetter.Callbacks callbacks, int maxWidth, int minWidth);
 
         interface Callbacks {
             void onImageFailed();
@@ -868,12 +869,12 @@ class HtmlToSpannedConverter implements org.xml.sax.ContentHandler, LexicalHandl
                 if (plugin instanceof IHtmlCommentHandler) {
                     wasCommentHandled = ((IHtmlCommentHandler) plugin).handleComment(comment, spannableStringBuilder,
                             nestingLevel, new Function1<Integer, Unit>() {
-                        @Override
-                        public Unit invoke(Integer newNesting) {
-                            nestingLevel = newNesting;
-                            return Unit.INSTANCE;
-                        }
-                    });
+                                @Override
+                                public Unit invoke(Integer newNesting) {
+                                    nestingLevel = newNesting;
+                                    return Unit.INSTANCE;
+                                }
+                            });
                     if (wasCommentHandled) {
                         break;
                     }
