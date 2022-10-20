@@ -57,13 +57,13 @@ subprojects {
 
 ext {
     gradlePluginVersion = '3.3.1'
-    kotlinCoroutinesVersion = '1.1.0'
+    kotlinCoroutinesVersion = '1.6.4'
     tagSoupVersion = '1.2.1'
     glideVersion = '4.10.0'
     picassoVersion = '2.5.2'
-    robolectricVersion = '4.4'
+    robolectricVersion = '4.9'
     jUnitVersion = '4.12'
-    jSoupVersion = '1.11.3'
+    jSoupVersion = '1.14.3'
     wordpressUtilsVersion = 'trunk-1ed207c03d2242b6fc3d74f9e388e9163cbc82a6'
     espressoVersion = '3.0.1'
     commonTargetSdkVersion = 31

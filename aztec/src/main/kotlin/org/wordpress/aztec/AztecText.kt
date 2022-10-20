@@ -441,12 +441,7 @@ open class AztecText : AppCompatEditText, TextWatcher, UnknownHtmlSpan.OnUnknown
         verticalHeadingMargin = styles.getDimensionPixelSize(R.styleable.AztecText_headingVerticalPadding,
                         resources.getDimensionPixelSize(R.dimen.heading_vertical_padding))
 
-        inlineFormatter = InlineFormatter(this,
-                InlineFormatter.CodeStyle(
-                        styles.getColor(R.styleable.AztecText_codeBackground, 0),
-                        styles.getFraction(R.styleable.AztecText_codeBackgroundAlpha, 1, 1, 0f),
-                        styles.getColor(R.styleable.AztecText_codeColor, 0)),
-                InlineFormatter.HighlightStyle(styles.getResourceId(R.styleable.AztecText_highlightColor, R.color.grey_lighten_10)))
+        initInlineFormatter(styles)
 
         val listStyle = BlockFormatter.ListStyle(
                 styles.getColor(R.styleable.AztecText_bulletColor, 0),
@@ -595,6 +590,23 @@ open class AztecText : AppCompatEditText, TextWatcher, UnknownHtmlSpan.OnUnknown
         enableTextChangedListener()
 
         isViewInitialized = true
+    }
+
+    open fun initInlineFormatter(styles: TypedArray) {
+        inlineFormatter = InlineFormatter(
+            this,
+            InlineFormatter.CodeStyle(
+                styles.getColor(R.styleable.AztecText_codeBackground, 0),
+                styles.getFraction(R.styleable.AztecText_codeBackgroundAlpha, 1, 1, 0f),
+                styles.getColor(R.styleable.AztecText_codeColor, 0)
+            ),
+            InlineFormatter.HighlightStyle(
+                styles.getResourceId(
+                    R.styleable.AztecText_highlightColor,
+                    R.color.grey_lighten_10
+                )
+            )
+        )
     }
 
     private fun <T>selectionHasExactlyOneMarker(start: Int, end: Int, type: Class<T>): Boolean {
@@ -886,51 +898,61 @@ open class AztecText : AppCompatEditText, TextWatcher, UnknownHtmlSpan.OnUnknown
         val savedState = state as SavedState
         super.onRestoreInstanceState(savedState.superState)
         val customState = savedState.state
-        val array = InstanceStateUtils.readAndPurgeTempInstance<ArrayList<String>>(HISTORY_LIST_KEY, ArrayList<String>(), savedState.state)
-        val list = LinkedList<String>()
+        if (customState != null) {
+            val array = InstanceStateUtils.readAndPurgeTempInstance<ArrayList<String>>(
+                HISTORY_LIST_KEY,
+                ArrayList(),
+                customState
+            )
+            val list = LinkedList<String>()
 
-        list += array
+            list += array
 
-        history.historyList = list
-        history.historyCursor = customState.getInt(HISTORY_CURSOR_KEY)
-        history.inputLast = InstanceStateUtils.readAndPurgeTempInstance<String>(INPUT_LAST_KEY, "", savedState.state)
-        visibility = customState.getInt(VISIBILITY_KEY)
+            history.historyList = list
+            history.historyCursor = customState.getInt(HISTORY_CURSOR_KEY)
+            history.inputLast = InstanceStateUtils.readAndPurgeTempInstance(INPUT_LAST_KEY, "", customState)
+            visibility = customState.getInt(VISIBILITY_KEY)
 
-        initialEditorContentParsedSHA256 = customState.getByteArray(RETAINED_INITIAL_HTML_PARSED_SHA256_KEY)
-        val retainedHtml = InstanceStateUtils.readAndPurgeTempInstance<String>(RETAINED_HTML_KEY, "", savedState.state)
-        fromHtml(retainedHtml)
+            initialEditorContentParsedSHA256 = customState.getByteArray(RETAINED_INITIAL_HTML_PARSED_SHA256_KEY) ?: ByteArray(0)
+            val retainedHtml = InstanceStateUtils.readAndPurgeTempInstance(RETAINED_HTML_KEY, "", customState)
+            fromHtml(retainedHtml)
 
-        val retainedSelectionStart = customState.getInt(SELECTION_START_KEY)
-        val retainedSelectionEnd = customState.getInt(SELECTION_END_KEY)
+            val retainedSelectionStart = customState.getInt(SELECTION_START_KEY)
+            val retainedSelectionEnd = customState.getInt(SELECTION_END_KEY)
 
-        if (retainedSelectionEnd < editableText.length) {
-            setSelection(retainedSelectionStart, retainedSelectionEnd)
-        }
+            if (retainedSelectionEnd < editableText.length) {
+                setSelection(retainedSelectionStart, retainedSelectionEnd)
+            }
 
-        val isLinkDialogVisible = customState.getBoolean(LINK_DIALOG_VISIBLE_KEY, false)
-        if (isLinkDialogVisible) {
-            val retainedUrl = customState.getString(LINK_DIALOG_URL_KEY, "")
-            val retainedAnchor = customState.getString(LINK_DIALOG_ANCHOR_KEY, "")
-            val retainedOpenInNewWindow = customState.getString(LINK_DIALOG_OPEN_NEW_WINDOW_KEY, "")
-            showLinkDialog(retainedUrl, retainedAnchor, retainedOpenInNewWindow)
-        }
+            val isLinkDialogVisible = customState.getBoolean(LINK_DIALOG_VISIBLE_KEY, false)
+            if (isLinkDialogVisible) {
+                val retainedUrl = customState.getString(LINK_DIALOG_URL_KEY, "")
+                val retainedAnchor = customState.getString(LINK_DIALOG_ANCHOR_KEY, "")
+                val retainedOpenInNewWindow = customState.getString(LINK_DIALOG_OPEN_NEW_WINDOW_KEY, "")
+                showLinkDialog(retainedUrl, retainedAnchor, retainedOpenInNewWindow)
+            }
 
-        val isBlockEditorDialogVisible = customState.getBoolean(BLOCK_DIALOG_VISIBLE_KEY, false)
-        if (isBlockEditorDialogVisible) {
-            val retainedBlockHtmlIndex = customState.getInt(BLOCK_EDITOR_START_INDEX_KEY, -1)
-            if (retainedBlockHtmlIndex != -1) {
-                val unknownSpan = text.getSpans(retainedBlockHtmlIndex, retainedBlockHtmlIndex + 1, UnknownHtmlSpan::class.java).firstOrNull()
-                if (unknownSpan != null) {
-                    val retainedBlockHtml = InstanceStateUtils.readAndPurgeTempInstance<String>(BLOCK_EDITOR_HTML_KEY, "",
-                            savedState.state)
-                    showBlockEditorDialog(unknownSpan, retainedBlockHtml)
+            val isBlockEditorDialogVisible = customState.getBoolean(BLOCK_DIALOG_VISIBLE_KEY, false)
+            if (isBlockEditorDialogVisible) {
+                val retainedBlockHtmlIndex = customState.getInt(BLOCK_EDITOR_START_INDEX_KEY, -1)
+                if (retainedBlockHtmlIndex != -1) {
+                    val unknownSpan =
+                        text.getSpans(retainedBlockHtmlIndex, retainedBlockHtmlIndex + 1, UnknownHtmlSpan::class.java)
+                            .firstOrNull()
+                    if (unknownSpan != null) {
+                        val retainedBlockHtml = InstanceStateUtils.readAndPurgeTempInstance<String>(
+                            BLOCK_EDITOR_HTML_KEY, "",
+                            customState
+                        )
+                        showBlockEditorDialog(unknownSpan, retainedBlockHtml)
+                    }
                 }
             }
+
+            isMediaAdded = customState.getBoolean(IS_MEDIA_ADDED_KEY)
+
+            enableTextChangedListener()
         }
-
-        isMediaAdded = customState.getBoolean(IS_MEDIA_ADDED_KEY)
-
-        enableTextChangedListener()
     }
 
     // Do not include the content of the editor when saving state to bundle.
@@ -981,9 +1003,9 @@ open class AztecText : AppCompatEditText, TextWatcher, UnknownHtmlSpan.OnUnknown
     }
 
     internal class SavedState : BaseSavedState {
-        var state: Bundle = Bundle()
+        var state: Bundle? = Bundle()
 
-        constructor(superState: Parcelable) : super(superState)
+        constructor(superState: Parcelable?) : super(superState)
 
         constructor(parcel: Parcel) : super(parcel) {
             state = parcel.readBundle(javaClass.classLoader)
@@ -1857,8 +1879,8 @@ open class AztecText : AppCompatEditText, TextWatcher, UnknownHtmlSpan.OnUnknown
 
         val html = Format.removeSourceEditorFormatting(parser.toHtml(output), isInCalypsoMode, isInGutenbergMode)
 
-        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
-        clipboard.primaryClip = ClipData.newHtmlText("aztec", output.toString(), html)
+        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        clipboard.setPrimaryClip(ClipData.newHtmlText("aztec", output.toString(), html))
     }
 
     // copied from TextView with some changes
@@ -2055,7 +2077,7 @@ open class AztecText : AppCompatEditText, TextWatcher, UnknownHtmlSpan.OnUnknown
 
         unknownBlockSpanStart = text.getSpanStart(unknownHtmlSpan)
         blockEditorDialog = builder.create()
-        blockEditorDialog!!.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        blockEditorDialog!!.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         blockEditorDialog!!.show()
     }
 

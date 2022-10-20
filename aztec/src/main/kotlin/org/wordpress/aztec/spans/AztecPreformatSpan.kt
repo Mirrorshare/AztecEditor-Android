@@ -124,8 +124,20 @@ open class AztecPreformatSpan(
         strokeCap = Paint.Cap.ROUND
     }
 
-    override fun drawBackground(canvas: Canvas, paint: Paint, left: Int, right: Int, top: Int, baseline: Int,
-                                bottom: Int, text: CharSequence?, start: Int, end: Int, lnum: Int) {
+
+    override fun drawBackground(
+        canvas: Canvas,
+        paint: Paint,
+        left: Int,
+        right: Int,
+        top: Int,
+        baseline: Int,
+        bottom: Int,
+        text: CharSequence,
+        start: Int,
+        end: Int,
+        lineNumber: Int
+    ) {
         val spanned = text as Spanned
         val spanStart = spanned.getSpanStart(this)
         val spanEnd = spanned.getSpanEnd(this)

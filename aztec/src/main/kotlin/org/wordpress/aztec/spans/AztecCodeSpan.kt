@@ -37,8 +37,8 @@ class AztecCodeSpan(override var attributes: AztecAttributes = AztecAttributes()
         configureTextPaint(tp)
     }
 
-    override fun updateMeasureState(tp: TextPaint?) {
-        configureTextPaint(tp)
+    override fun updateMeasureState(textPaint: TextPaint) {
+        configureTextPaint(textPaint)
     }
 
     private fun configureTextPaint(tp: TextPaint?) {

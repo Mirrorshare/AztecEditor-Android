@@ -98,7 +98,7 @@ open class SourceViewEditText : AppCompatEditText, TextWatcher {
         visibility = customState.getInt("visibility")
         val retainedContent = InstanceStateUtils.readAndPurgeTempInstance<String>(RETAINED_CONTENT_KEY, "", savedState.state)
         setText(retainedContent)
-        initialEditorContentParsedSHA256 = customState.getByteArray(AztecText.RETAINED_INITIAL_HTML_PARSED_SHA256_KEY)
+        initialEditorContentParsedSHA256 = customState.getByteArray(AztecText.RETAINED_INITIAL_HTML_PARSED_SHA256_KEY) ?: ByteArray(0)
     }
 
     // Do not include the content of the editor when saving state to bundle.
@@ -111,7 +111,7 @@ open class SourceViewEditText : AppCompatEditText, TextWatcher {
 
     override fun onSaveInstanceState(): Parcelable {
         val bundle = Bundle()
-        bundle.putByteArray(org.wordpress.aztec.AztecText.RETAINED_INITIAL_HTML_PARSED_SHA256_KEY,
+        bundle.putByteArray(AztecText.RETAINED_INITIAL_HTML_PARSED_SHA256_KEY,
                 initialEditorContentParsedSHA256)
         InstanceStateUtils.writeTempInstance(context, null, RETAINED_CONTENT_KEY, text.toString(), bundle)
         val superState = super.onSaveInstanceState()
@@ -124,10 +124,10 @@ open class SourceViewEditText : AppCompatEditText, TextWatcher {
     internal class SavedState : BaseSavedState {
         var state: Bundle = Bundle()
 
-        constructor(superState: Parcelable) : super(superState)
+        constructor(superState: Parcelable?) : super(superState)
 
         constructor(parcel: Parcel) : super(parcel) {
-            state = parcel.readBundle(javaClass.classLoader)
+            state = parcel.readBundle(javaClass.classLoader) ?: Bundle()
         }
 
         override fun writeToParcel(out: Parcel, flags: Int) {

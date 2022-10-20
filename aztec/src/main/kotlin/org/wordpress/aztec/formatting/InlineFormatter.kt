@@ -31,7 +31,7 @@ import org.wordpress.aztec.watchers.TextChangedEvent
  * <b>Important</b> - use [applySpan] to add new spans to the editor. This method will
  * make sure any attributes belonging to the span are processed.
  */
-class InlineFormatter(editor: AztecText, val codeStyle: CodeStyle, private val highlightStyle: HighlightStyle) : AztecFormatter(editor) {
+open class InlineFormatter(editor: AztecText, val codeStyle: CodeStyle, private val highlightStyle: HighlightStyle) : AztecFormatter(editor) {
 
     data class CodeStyle(val codeBackground: Int, val codeBackgroundAlpha: Float, val codeColor: Int)
     data class HighlightStyle(@ColorRes val color: Int)
@@ -282,7 +282,7 @@ class InlineFormatter(editor: AztecText, val codeStyle: CodeStyle, private val h
         joinStyleSpans(start, end)
     }
 
-    fun removeInlineCssStyle(start: Int = selectionStart, end: Int = selectionEnd) {
+    open fun removeInlineCssStyle(start: Int = selectionStart, end: Int = selectionEnd) {
         val spans = editableText.getSpans(start, end, ForegroundColorSpan::class.java)
         spans.forEach {
             editableText.removeSpan(it)

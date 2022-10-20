@@ -17,6 +17,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
+import android.os.PersistableBundle
 import android.provider.MediaStore
 import android.util.DisplayMetrics
 import android.view.Gravity
@@ -253,7 +254,7 @@ open class MainActivity : AppCompatActivity(),
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
-            var bitmap: Bitmap
+            var bitmap: Bitmap?
 
             when (requestCode) {
                 REQUEST_MEDIA_CAMERA_PHOTO -> {
@@ -287,12 +288,13 @@ open class MainActivity : AppCompatActivity(),
 
                         override fun onThumbnailLoaded(drawable: Drawable?) {
                             val conf = Bitmap.Config.ARGB_8888 // see other conf types
-                            bitmap = Bitmap.createBitmap(drawable!!.intrinsicWidth, drawable.intrinsicHeight, conf)
-                            val canvas = Canvas(bitmap)
+                            val newBitmap = Bitmap.createBitmap(drawable!!.intrinsicWidth, drawable.intrinsicHeight, conf)
+                            val canvas = Canvas(newBitmap)
                             drawable.setBounds(0, 0, canvas.width, canvas.height)
                             drawable.draw(canvas)
 
-                            insertVideoAndSimulateUpload(bitmap, mediaPath)
+                            insertVideoAndSimulateUpload(newBitmap, mediaPath)
+                            bitmap = newBitmap
                         }
 
                         override fun onThumbnailLoading(drawable: Drawable?) {
@@ -511,9 +513,8 @@ open class MainActivity : AppCompatActivity(),
         }
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
-        super.onRestoreInstanceState(savedInstanceState)
-
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        super.onRestoreInstanceState(savedInstanceState, persistentState)
         aztec.initSourceEditorHistory()
 
         savedInstanceState?.let {
@@ -522,15 +523,12 @@ open class MainActivity : AppCompatActivity(),
             }
         }
     }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        super.onSaveInstanceState(outState, outPersistentState)
         if (mediaUploadDialog != null && mediaUploadDialog!!.isShowing) {
             outState?.putBoolean("isMediaUploadDialogVisible", true)
         }
     }
-
     /**
      * Returns true if a hardware keyboard is detected, otherwise false.
      */
